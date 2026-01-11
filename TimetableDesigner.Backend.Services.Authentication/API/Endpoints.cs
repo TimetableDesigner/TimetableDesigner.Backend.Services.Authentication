@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
-using TimetableDesigner.API.Services.Authentication.DTO;
+using TimetableDesigner.Backend.Services.Authentication.Application.Register;
+using TimetableDesigner.Backend.Services.Authentication.DTO;
 
-namespace TimetableDesigner.API.Services.Authentication.API;
+namespace TimetableDesigner.Backend.Services.Authentication.API;
 
 public static class Endpoints
 {
@@ -17,9 +18,11 @@ public static class Endpoints
         return app;
     }
 
-    public static async Task<Results<Ok<AuthenticateResponse>, ProblemHttpResult>> Register(RegisterRequest request)
+    public static async Task<Results<Created<RegisterResponse>, ProblemHttpResult>> Register(RegisterRequest request, RegisterHandler handler)
     {
-        return null;
+        RegisterCommand command = request.ToCommand();
+        RegisterResponse account = await handler.HandleAsync(command);
+        return Results.Created($"accounts/{account.Id}", account);
     }
 
     public static async Task<Results<Ok<AuthenticateResponse>, ProblemHttpResult>> AuthenticatePassword(AuthenticatePasswordRequest request)

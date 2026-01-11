@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using TimetableDesigner.API.Services.Authentication.Database.Model;
+using TimetableDesigner.Backend.Services.Authentication.Database.Model;
 
-namespace TimetableDesigner.API.Services.Authentication.Database;
+namespace TimetableDesigner.Backend.Services.Authentication.Database;
 
 public class DatabaseContext : DbContext
 {

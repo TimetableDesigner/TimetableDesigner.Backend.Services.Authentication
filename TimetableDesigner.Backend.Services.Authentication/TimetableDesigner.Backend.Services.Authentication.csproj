@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TimetableDesigner.API.Services.Authentication.DTO\TimetableDesigner.API.Services.Authentication.DTO.csproj" />
+      <ProjectReference Include="..\TimetableDesigner.Backend.Services.Authentication.DTO\TimetableDesigner.Backend.Services.Authentication.DTO.csproj" />
     </ItemGroup>
 
 </Project>

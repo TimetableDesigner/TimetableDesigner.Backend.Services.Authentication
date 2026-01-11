@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableDesigner.API.Services.Authentication", "TimetableDesigner.API.Services.Authentication/TimetableDesigner.API.Services.Authentication.csproj", "{F8C0AEF3-B53F-4904-90F7-EE4A8587F023}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableDesigner.Backend.Services.Authentication", "TimetableDesigner.Backend.Services.Authentication\TimetableDesigner.Backend.Services.Authentication.csproj", "{F8C0AEF3-B53F-4904-90F7-EE4A8587F023}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableDesigner.API.Services.Authentication.DTO", "TimetableDesigner.API.Services.Authentication.DTO\TimetableDesigner.API.Services.Authentication.DTO.csproj", "{384C8036-ACA7-40EB-924D-5E0271BEDB09}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableDesigner.Backend.Services.Authentication.DTO", "TimetableDesigner.Backend.Services.Authentication.DTO\TimetableDesigner.Backend.Services.Authentication.DTO.csproj", "{384C8036-ACA7-40EB-924D-5E0271BEDB09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

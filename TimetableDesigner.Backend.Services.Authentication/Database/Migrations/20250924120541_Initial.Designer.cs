@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using TimetableDesigner.API.Services.Authentication.Database;
+using TimetableDesigner.Backend.Services.Authentication.Database;
 
 #nullable disable
 
-namespace TimetableDesigner.API.Services.Authentication.Database.Migrations
+namespace TimetableDesigner.Backend.Services.Authentication.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250924120541_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace TimetableDesigner.API.Services.Authentication.Database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TimetableDesigner.API.Services.Authentication.Database.Model.Account", b =>
+            modelBuilder.Entity("TimetableDesigner.Backend.Services.Authentication.Database.Model.Account", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +67,7 @@ namespace TimetableDesigner.API.Services.Authentication.Database.Migrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("TimetableDesigner.API.Services.Authentication.Database.Model.RefreshToken", b =>
+            modelBuilder.Entity("TimetableDesigner.Backend.Services.Authentication.Database.Model.RefreshToken", b =>
                 {
                     b.Property<Guid>("Token")
                         .ValueGeneratedOnAdd()
@@ -95,9 +98,9 @@ namespace TimetableDesigner.API.Services.Authentication.Database.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("TimetableDesigner.API.Services.Authentication.Database.Model.RefreshToken", b =>
+            modelBuilder.Entity("TimetableDesigner.Backend.Services.Authentication.Database.Model.RefreshToken", b =>
                 {
-                    b.HasOne("TimetableDesigner.API.Services.Authentication.Database.Model.Account", "Account")
+                    b.HasOne("TimetableDesigner.Backend.Services.Authentication.Database.Model.Account", "Account")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -106,7 +109,7 @@ namespace TimetableDesigner.API.Services.Authentication.Database.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("TimetableDesigner.API.Services.Authentication.Database.Model.Account", b =>
+            modelBuilder.Entity("TimetableDesigner.Backend.Services.Authentication.Database.Model.Account", b =>
                 {
                     b.Navigation("RefreshTokens");
                 });

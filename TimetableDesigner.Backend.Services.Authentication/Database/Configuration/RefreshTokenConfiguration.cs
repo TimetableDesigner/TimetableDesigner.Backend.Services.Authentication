@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TimetableDesigner.API.Services.Authentication.Database.Model;
+using TimetableDesigner.Backend.Services.Authentication.Database.Model;
 
-namespace TimetableDesigner.API.Services.Authentication.Database.Configuration;
+namespace TimetableDesigner.Backend.Services.Authentication.Database.Configuration;
 
 public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {

@@ -1,4 +1,4 @@
-﻿namespace TimetableDesigner.API.Services.Authentication.Database.Model;
+﻿namespace TimetableDesigner.Backend.Services.Authentication.Database.Model;
 
 public class Account
 {

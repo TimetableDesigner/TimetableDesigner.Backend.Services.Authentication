@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using TimetableDesigner.API.Services.Authentication.API;
-using TimetableDesigner.API.Services.Authentication.Database;
+using TimetableDesigner.Backend.Services.Authentication.API;
+using TimetableDesigner.Backend.Services.Authentication.Database;
 
-namespace TimetableDesigner.API.Services.Authentication;
+namespace TimetableDesigner.Backend.Services.Authentication;
 
 public static class Program
 {

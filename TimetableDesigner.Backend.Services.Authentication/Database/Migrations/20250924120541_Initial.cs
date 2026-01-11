@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace TimetableDesigner.API.Services.Authentication.Database.Migrations
+namespace TimetableDesigner.Backend.Services.Authentication.Database.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
