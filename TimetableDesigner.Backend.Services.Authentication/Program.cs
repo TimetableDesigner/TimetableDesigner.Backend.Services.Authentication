@@ -1,6 +1,10 @@
+using System.Reflection;
+using FluentValidation;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using TimetableDesigner.Backend.Services.Authentication.API;
 using TimetableDesigner.Backend.Services.Authentication.Database;
+using TimetableDesigner.Backend.Services.Authentication.DTO.Validators;
 
 namespace TimetableDesigner.Backend.Services.Authentication;
 
@@ -12,6 +16,7 @@ public static class Program
                                            .SetupOpenApi()
                                            .SetupSecurity()
                                            .SetupDatabase()
+                                           .SetupValidation()
                                            .Build();
         
         if (app.Environment.IsDevelopment())
@@ -38,6 +43,12 @@ public static class Program
     private static WebApplicationBuilder SetupDatabase(this WebApplicationBuilder builder)
     {
         builder.Services.AddDbContext<DatabaseContext>(x => x.UseNpgsql(builder.Configuration.GetConnectionString("Database")), ServiceLifetime.Transient);
+        return builder;
+    }
+
+    private static WebApplicationBuilder SetupValidation(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<IValidator<TimetableDesigner.Backend.Services.Authentication.DTO.API.RegisterRequest>, RegisterRequestValidator>();
         return builder;
     }
     

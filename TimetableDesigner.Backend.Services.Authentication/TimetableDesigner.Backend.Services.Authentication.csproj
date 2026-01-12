@@ -1,13 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <LangVersion>14</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="12.1.1" />
       <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
         <PrivateAssets>all</PrivateAssets>
@@ -17,11 +19,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Workers\" />
+      <Folder Include="DTO\Mappers\" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TimetableDesigner.Backend.Services.Authentication.DTO\TimetableDesigner.Backend.Services.Authentication.DTO.csproj" />
+      <ProjectReference Include="..\TimetableDesigner.Backend.Services.Authentication.DTO\TimetableDesigner.Backend.Services.Authentication.DTO.API\TimetableDesigner.Backend.Services.Authentication.DTO.API.csproj" />
     </ItemGroup>
 
 </Project>

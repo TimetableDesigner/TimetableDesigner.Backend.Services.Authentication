@@ -1,4 +1,4 @@
-﻿namespace TimetableDesigner.Backend.Services.Authentication.DTO;
+﻿namespace TimetableDesigner.Backend.Services.Authentication.DTO.API;
 
 public class AuthenticatePasswordRequest
 {

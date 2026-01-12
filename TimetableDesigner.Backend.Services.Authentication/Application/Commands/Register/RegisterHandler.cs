@@ -1,7 +1,6 @@
 ﻿using TimetableDesigner.Backend.Services.Authentication.Database;
-using TimetableDesigner.Backend.Services.Authentication.DTO;
 
-namespace TimetableDesigner.Backend.Services.Authentication.Application.Register;
+namespace TimetableDesigner.Backend.Services.Authentication.Application.Commands.Register;
 
 public class RegisterHandler
 {
@@ -12,7 +11,7 @@ public class RegisterHandler
         _databaseContext = databaseContext;
     }
 
-    public async Task<RegisterResponse> HandleAsync(RegisterCommand command)
+    public async Task<RegisterDto> HandleAsync(RegisterCommand command)
     {
         return null;
     }
