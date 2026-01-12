@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using TimetableDesigner.Backend.Services.Authentication.Application.Commands.Register;
 using TimetableDesigner.Backend.Services.Authentication.DTO.API;
 
@@ -18,10 +19,10 @@ public static class Endpoints
         return app;
     }
 
-    public static async Task<Results<Created<RegisterResponse>, ProblemHttpResult>> Register(RegisterCommand command, RegisterHandler handler)
+    public static async Task<Results<Created<RegisterResponse>, ProblemHttpResult>> Register(RegisterCommand command, IMediator mediator)
     {
-        RegisterDto data = await handler.HandleAsync(command);
-        return Results.Created($"accounts/{data.Id}", data);
+        await mediator.Send(command);
+        return Results.Created($"accounts/0", null);
     }
 
     public static async Task<Results<Ok<AuthenticateResponse>, ProblemHttpResult>> AuthenticatePassword(AuthenticatePasswordRequest request)

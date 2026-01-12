@@ -1,8 +1,9 @@
-﻿using TimetableDesigner.Backend.Services.Authentication.Database;
+﻿using MediatR;
+using TimetableDesigner.Backend.Services.Authentication.Database;
 
 namespace TimetableDesigner.Backend.Services.Authentication.Application.Commands.Register;
 
-public class RegisterHandler
+public class RegisterHandler : IRequestHandler<RegisterCommand>
 {
     private readonly DatabaseContext _databaseContext;
     
@@ -11,8 +12,8 @@ public class RegisterHandler
         _databaseContext = databaseContext;
     }
 
-    public async Task<RegisterDto> HandleAsync(RegisterCommand command)
+    public async Task Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-        return null;
+        
     }
 }

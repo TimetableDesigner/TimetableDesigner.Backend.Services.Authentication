@@ -17,6 +17,7 @@ public static class Program
                                            .SetupSecurity()
                                            .SetupDatabase()
                                            .SetupValidation()
+                                           .SetupMediatR()
                                            .Build();
         
         if (app.Environment.IsDevelopment())
@@ -49,6 +50,12 @@ public static class Program
     private static WebApplicationBuilder SetupValidation(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<IValidator<TimetableDesigner.Backend.Services.Authentication.DTO.API.RegisterRequest>, RegisterRequestValidator>();
+        return builder;
+    }
+    
+    private static WebApplicationBuilder SetupMediatR(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(Program).Assembly));
         return builder;
     }
     
