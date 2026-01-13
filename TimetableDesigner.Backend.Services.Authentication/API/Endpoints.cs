@@ -19,18 +19,19 @@ public static class Endpoints
         return app;
     }
 
-    public static async Task<Results<Created<RegisterResponse>, ProblemHttpResult>> Register(RegisterCommand command, IMediator mediator)
+    public static async Task<Results<Created<RegisterResponse>, InternalServerError>> Register(RegisterRequest request, CancellationToken cancellationToken, IMediator mediator)
     {
-        await mediator.Send(command);
-        return Results.Created($"accounts/0", null);
+        RegisterCommand registerCommand = request.ToCommand();
+        RegisterData data = await mediator.Send(registerCommand, cancellationToken);
+        return Results.Created<RegisterResponse>($"accounts/0", null);
     }
 
-    public static async Task<Results<Ok<AuthenticateResponse>, ProblemHttpResult>> AuthenticatePassword(AuthenticatePasswordRequest request)
+    public static async Task<Results<Ok<AuthenticateResponse>, ProblemHttpResult>> AuthenticatePassword(AuthenticatePasswordRequest request, CancellationToken cancellationToken)
     {
         return null;
     }
     
-    public static async Task<Results<Ok<AuthenticateResponse>, ProblemHttpResult>> AuthenticateToken(AuthenticateTokenRequest request)
+    public static async Task<Results<Ok<AuthenticateResponse>, ProblemHttpResult>> AuthenticateToken(AuthenticateTokenRequest request, CancellationToken cancellationToken)
     {
         return null;
     }

@@ -3,5 +3,5 @@
 public interface IPasswordHasher
 {
     PasswordHashData CreateHash(string password);
-    byte[] ComputeHash(string password, string salt);
+    bool ValidatePassword(PasswordHashData hash, string password);
 }

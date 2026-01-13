@@ -2,6 +2,5 @@
 
 public record PasswordHashData(
     byte[] Hash,
-    string LeftSalt,
-    string RightSalt
+    string Salt
 );

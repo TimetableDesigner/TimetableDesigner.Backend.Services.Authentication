@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TimetableDesigner.Backend.Services.Authentication.Database;
 using TimetableDesigner.Backend.Services.Authentication.DTO.API;
 
-namespace TimetableDesigner.Backend.Services.Authentication.DTO.Validators;
+namespace TimetableDesigner.Backend.Services.Authentication.API.Validators;
 
 public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {
