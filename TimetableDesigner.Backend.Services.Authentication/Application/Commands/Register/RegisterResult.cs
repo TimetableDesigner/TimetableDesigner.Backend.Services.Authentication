@@ -1,6 +1,6 @@
 ﻿namespace TimetableDesigner.Backend.Services.Authentication.Application.Commands.Register;
 
-public class RegisterData
-{
-    
-}
+public record RegisterResult(
+    long Id, 
+    string Email
+);

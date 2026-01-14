@@ -23,11 +23,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
                .HasMaxLength(1000)
                .IsRequired();
         
-        builder.Property(x => x.PasswordSaltLeft)
-               .HasMaxLength(20)
-               .IsRequired();
-        
-        builder.Property(x => x.PasswordSaltRight)
+        builder.Property(x => x.PasswordSalt)
                .HasMaxLength(20)
                .IsRequired();
         

@@ -1,6 +1,6 @@
 ﻿namespace TimetableDesigner.Backend.Services.Authentication.DTO.API;
 
-public class RegisterResponse
-{
-    
-}
+public record RegisterResponse(
+    long Id,
+    string Email
+);
