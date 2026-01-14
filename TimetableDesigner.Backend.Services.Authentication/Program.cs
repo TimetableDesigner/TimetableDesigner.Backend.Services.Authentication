@@ -2,6 +2,8 @@ using System.Reflection;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
+using TimetableDesigner.Backend.Events;
+using TimetableDesigner.Backend.Events.RabbitMQ;
 using TimetableDesigner.Backend.Services.Authentication.API;
 using TimetableDesigner.Backend.Services.Authentication.API.Validators;
 using TimetableDesigner.Backend.Services.Authentication.Application.Helpers;
@@ -33,6 +35,13 @@ public static class Program
 
     private static WebApplicationBuilder SetupOpenApi(this WebApplicationBuilder builder)
     {
+        builder.Services.AddEventQueue<RabbitMQEventQueueBuilder>(cfg =>
+        {
+            cfg.Hostname = "localhost";
+            cfg.Port = 5672;
+            cfg.Username = "user";
+            cfg.Password = "l4JxOIuSoyod86N";
+        });
         builder.Services.AddOpenApi();
         return builder;
     }
@@ -57,7 +66,7 @@ public static class Program
 
     private static WebApplicationBuilder SetupValidation(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IValidator<TimetableDesigner.Backend.Services.Authentication.DTO.API.RegisterRequest>, RegisterRequestValidator>();
+        builder.Services.AddScoped<IValidator<TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI.RegisterRequest>, RegisterRequestValidator>();
         return builder;
     }
     

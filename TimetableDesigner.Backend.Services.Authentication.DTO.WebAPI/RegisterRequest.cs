@@ -1,4 +1,4 @@
-﻿namespace TimetableDesigner.Backend.Services.Authentication.DTO.API;
+﻿namespace TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI;
 
 public record RegisterRequest(
     string Email, 

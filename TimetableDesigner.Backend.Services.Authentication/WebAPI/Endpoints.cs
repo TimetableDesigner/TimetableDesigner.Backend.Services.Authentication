@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using TimetableDesigner.Backend.Services.Authentication.Application.Commands.Register;
-using TimetableDesigner.Backend.Services.Authentication.DTO.API;
+using TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI;
 
 namespace TimetableDesigner.Backend.Services.Authentication.API;
 

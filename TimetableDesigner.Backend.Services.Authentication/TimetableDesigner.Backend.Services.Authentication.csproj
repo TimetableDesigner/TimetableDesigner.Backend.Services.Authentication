@@ -21,7 +21,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TimetableDesigner.Backend.Services.Authentication.DTO\TimetableDesigner.Backend.Services.Authentication.DTO.API\TimetableDesigner.Backend.Services.Authentication.DTO.API.csproj" />
+      <ProjectReference Include="..\..\TimetableDesigner.Backend.Events\TimetableDesigner.Backend.Events\TimetableDesigner.Backend.Events.csproj" />
+      <ProjectReference Include="..\TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI\TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI.csproj" />
     </ItemGroup>
 
 </Project>

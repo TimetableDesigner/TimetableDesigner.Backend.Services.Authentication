@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using TimetableDesigner.Backend.Services.Authentication.Database;
-using TimetableDesigner.Backend.Services.Authentication.DTO.API;
+using TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI;
 
 namespace TimetableDesigner.Backend.Services.Authentication.API.Validators;
 
