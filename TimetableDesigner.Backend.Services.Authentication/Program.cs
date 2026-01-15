@@ -2,12 +2,14 @@ using System.Reflection;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
-using TimetableDesigner.Backend.Events;
-using TimetableDesigner.Backend.Events.RabbitMQ;
+using TimetableDesigner.Backend.Events.Extensions.AspNetCore.OpenApi;
+using TimetableDesigner.Backend.Events.Providers.RabbitMQ;
 using TimetableDesigner.Backend.Services.Authentication.API;
 using TimetableDesigner.Backend.Services.Authentication.API.Validators;
 using TimetableDesigner.Backend.Services.Authentication.Application.Helpers;
 using TimetableDesigner.Backend.Services.Authentication.Database;
+using TimetableDesigner.Backend.Services.Authentication.Events;
+using TimetableDesigner.Backend.Services.Authentication.WebAPI;
 
 namespace TimetableDesigner.Backend.Services.Authentication;
 
@@ -27,20 +29,23 @@ public static class Program
         if (app.Environment.IsDevelopment())
             app.MapOpenApi();
         app.InitializeDatabase();
-        app.UseHttpsRedirection();
-        app.MapEndpoints();
+        //app.UseHttpsRedirection();
+        app.MapWebAPIEndpoints();
+        app.MapEventHandlers();
         
         app.Run();
     }
 
     private static WebApplicationBuilder SetupOpenApi(this WebApplicationBuilder builder)
     {
-        builder.Services.AddEventQueue<RabbitMQEventQueueBuilder>(cfg =>
+        builder.Services.AddEventQueue<RabbitMQEventQueue>(cfg =>
         {
             cfg.Hostname = "localhost";
             cfg.Port = 5672;
             cfg.Username = "user";
             cfg.Password = "l4JxOIuSoyod86N";
+            cfg.ExchangeName = "events";
+            cfg.QueuePrefix = "authentication";
         });
         builder.Services.AddOpenApi();
         return builder;

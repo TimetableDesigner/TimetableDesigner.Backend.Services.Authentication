@@ -2,15 +2,15 @@
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+using TimetableDesigner.Backend.Events;
 using TimetableDesigner.Backend.Services.Authentication.Application.Commands.Register;
 using TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI;
 
-namespace TimetableDesigner.Backend.Services.Authentication.API;
+namespace TimetableDesigner.Backend.Services.Authentication.WebAPI;
 
 public static class Endpoints
 {
-    public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapWebAPIEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/register", Register)
            .AllowAnonymous()
@@ -22,6 +22,9 @@ public static class Endpoints
            .WithName("AuthenticatePassword");
         app.MapPost("/authenticate_token", AuthenticateToken)
            .WithName("AuthenticateToken");
+        app.MapPost("/test", Test)
+           .AllowAnonymous()
+           .WithName("Test");
 
         return app;
     }
@@ -49,5 +52,12 @@ public static class Endpoints
     public static async Task<Results<Ok<AuthenticateResponse>, ProblemHttpResult>> AuthenticateToken(AuthenticateTokenRequest request)
     {
         return null;
+    }
+
+    public static async Task<Results<Ok, InternalServerError>> Test(IEventQueuePublisher publisher)
+    {
+        await publisher.PublishAsync(new RegisterRequest("aaaa", "bbbb", "ccccc"));
+        
+        return TypedResults.Ok();
     }
 }
