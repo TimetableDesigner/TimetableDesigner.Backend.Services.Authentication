@@ -17,14 +17,19 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        WebApplication app = WebApplication.CreateBuilder(args)
-                                           .SetupOpenApi()
-                                           .SetupSecurity()
-                                           .SetupDatabase()
-                                           .SetupHelpers()
-                                           .SetupValidation()
-                                           .SetupMediatR()
-                                           .Build();
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+        string databaseConnectionString = builder.Configuration.GetConnectionString("Database")!;
+        string eventQueueConnectionString = builder.Configuration.GetConnectionString("EventQueue")!;
+        
+        builder.Services.AddOpenApi();
+        builder.Services.AddDbContext<DatabaseContext>(x => x.UseNpgsql(databaseConnectionString), ServiceLifetime.Transient);
+        builder.Services.AddEventQueue<RabbitMQEventQueue>(eventQueueConnectionString);
+        builder.Services.AddHelpers();
+        builder.Services.AddValidators();
+        builder.Services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(Program).Assembly));
+        
+        WebApplication app = builder.Build();
         
         if (app.Environment.IsDevelopment())
             app.MapOpenApi();
@@ -35,50 +40,17 @@ public static class Program
         
         app.Run();
     }
-
-    private static WebApplicationBuilder SetupOpenApi(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddEventQueue<RabbitMQEventQueue>(cfg =>
-        {
-            cfg.Hostname = "localhost";
-            cfg.Port = 5672;
-            cfg.Username = "user";
-            cfg.Password = "l4JxOIuSoyod86N";
-            cfg.ExchangeName = "events";
-            cfg.QueuePrefix = "authentication";
-        });
-        builder.Services.AddOpenApi();
-        return builder;
-    }
     
-    private static WebApplicationBuilder SetupSecurity(this WebApplicationBuilder builder)
+    private static IServiceCollection AddHelpers(this IServiceCollection services)
     {
-        //builder.Services.AddAuthorization();
-        return builder;
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        return services;
     }
 
-    private static WebApplicationBuilder SetupDatabase(this WebApplicationBuilder builder)
+    private static IServiceCollection AddValidators(this IServiceCollection services)
     {
-        builder.Services.AddDbContext<DatabaseContext>(x => x.UseNpgsql(builder.Configuration.GetConnectionString("Database")), ServiceLifetime.Transient);
-        return builder;
-    }
-    
-    private static WebApplicationBuilder SetupHelpers(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
-        return builder;
-    }
-
-    private static WebApplicationBuilder SetupValidation(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddScoped<IValidator<TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI.RegisterRequest>, RegisterRequestValidator>();
-        return builder;
-    }
-    
-    private static WebApplicationBuilder SetupMediatR(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(Program).Assembly));
-        return builder;
+        services.AddScoped<IValidator<TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI.RegisterRequest>, RegisterRequestValidator>();
+        return services;
     }
     
     private static WebApplication InitializeDatabase(this WebApplication app)

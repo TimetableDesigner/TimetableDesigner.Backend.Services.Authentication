@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using TimetableDesigner.Backend.Events;
 using TimetableDesigner.Backend.Services.Authentication.Application.Helpers;
 using TimetableDesigner.Backend.Services.Authentication.Database;
 using TimetableDesigner.Backend.Services.Authentication.Database.Model;
+using TimetableDesigner.Backend.Services.Authentication.DTO.Events;
 
 namespace TimetableDesigner.Backend.Services.Authentication.Application.Commands.Register;
 
@@ -9,11 +11,13 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, RegisterResult>
 {
     private readonly DatabaseContext _databaseContext;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IEventQueuePublisher _eventQueuePublisher;
     
-    public RegisterHandler(DatabaseContext databaseContext, IPasswordHasher passwordHasher)
+    public RegisterHandler(DatabaseContext databaseContext, IPasswordHasher passwordHasher, IEventQueuePublisher eventQueuePublisher)
     {
         _databaseContext = databaseContext;
         _passwordHasher = passwordHasher;
+        _eventQueuePublisher = eventQueuePublisher;
     }
 
     public async Task<RegisterResult> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -28,8 +32,9 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, RegisterResult>
         };
         await _databaseContext.Accounts.AddAsync(account, cancellationToken);
         await _databaseContext.SaveChangesAsync(cancellationToken);
-        
-        // Publish event (probably in transaction)
+
+        RegisterEvent eventData = account.ToEvent();
+        await _eventQueuePublisher.PublishAsync(eventData);
 
         RegisterResult result = account.ToResult();
         return result;

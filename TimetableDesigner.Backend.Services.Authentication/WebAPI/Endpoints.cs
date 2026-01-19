@@ -29,7 +29,7 @@ public static class Endpoints
         return app;
     }
 
-    private static async Task<Results<Created<RegisterResponse>, ValidationProblem>> Register(IMediator mediator, IValidator<RegisterRequest> validator, RegisterRequest request)
+    private static async Task<Results<Created<RegisterResponse>, ValidationProblem>> Register(IMediator mediator, IValidator<RegisterRequest> validator, RegisterRequest request, CancellationToken cancellationToken)
     {
         ValidationResult validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid) 
@@ -38,7 +38,7 @@ public static class Endpoints
         }
         
         RegisterCommand registerCommand = request.ToCommand();
-        RegisterResult result = await mediator.Send(registerCommand);
+        RegisterResult result = await mediator.Send(registerCommand, cancellationToken);
         RegisterResponse response = result.ToResponse();
         
         return TypedResults.Created($"accounts/{response.Id}", response);

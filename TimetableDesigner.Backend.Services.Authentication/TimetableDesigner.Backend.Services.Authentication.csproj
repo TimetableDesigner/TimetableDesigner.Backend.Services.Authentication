@@ -18,11 +18,12 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
-      <PackageReference Include="timetabledesigner.backend.events.extensions.aspnetcore.openapi" Version="1.0.0" />
-      <PackageReference Include="TimetableDesigner.Backend.Events.Providers.RabbitMQ" Version="1.0.1" />
+      <PackageReference Include="timetabledesigner.backend.events.extensions.aspnetcore.openapi" Version="1.0.1" />
+      <PackageReference Include="TimetableDesigner.Backend.Events.Providers.RabbitMQ" Version="1.0.4" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\TimetableDesigner.Backend.Services.Authentication.DTO.Events\TimetableDesigner.Backend.Services.Authentication.DTO.Events.csproj" />
       <ProjectReference Include="..\TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI\TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI.csproj" />
     </ItemGroup>
 

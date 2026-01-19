@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="TimetableDesigner.Backend.Services.Authentication.DTO.Events/TimetableDesigner.Backend.Services.Authentication.DTO.Events.csproj" />
   <Project Path="TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI/TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI.csproj" />
   <Project Path="TimetableDesigner.Backend.Services.Authentication/TimetableDesigner.Backend.Services.Authentication.csproj" />
 </Solution>
