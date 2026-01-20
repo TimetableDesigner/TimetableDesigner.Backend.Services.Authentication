@@ -6,7 +6,7 @@ using TimetableDesigner.Backend.Events.Extensions.AspNetCore.OpenApi;
 using TimetableDesigner.Backend.Events.Providers.RabbitMQ;
 using TimetableDesigner.Backend.Services.Authentication.API;
 using TimetableDesigner.Backend.Services.Authentication.API.Validators;
-using TimetableDesigner.Backend.Services.Authentication.Application.Helpers;
+using TimetableDesigner.Backend.Services.Authentication.Core.Helpers;
 using TimetableDesigner.Backend.Services.Authentication.Database;
 using TimetableDesigner.Backend.Services.Authentication.Events;
 using TimetableDesigner.Backend.Services.Authentication.WebAPI;

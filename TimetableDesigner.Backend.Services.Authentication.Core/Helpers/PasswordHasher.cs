@@ -2,7 +2,7 @@
 using System.Text;
 using Konscious.Security.Cryptography;
 
-namespace TimetableDesigner.Backend.Services.Authentication.Application.Helpers;
+namespace TimetableDesigner.Backend.Services.Authentication.Core.Helpers;
 
 public class PasswordHasher : IPasswordHasher
 {

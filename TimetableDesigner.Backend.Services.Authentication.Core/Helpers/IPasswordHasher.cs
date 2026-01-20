@@ -1,4 +1,4 @@
-﻿namespace TimetableDesigner.Backend.Services.Authentication.Application.Helpers;
+﻿namespace TimetableDesigner.Backend.Services.Authentication.Core.Helpers;
 
 public interface IPasswordHasher
 {

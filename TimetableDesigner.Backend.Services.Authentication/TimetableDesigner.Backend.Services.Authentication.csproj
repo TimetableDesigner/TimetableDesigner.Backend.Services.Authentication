@@ -23,8 +23,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\TimetableDesigner.Backend.Services.Authentication.Core\TimetableDesigner.Backend.Services.Authentication.Core.csproj" />
       <ProjectReference Include="..\TimetableDesigner.Backend.Services.Authentication.DTO.Events\TimetableDesigner.Backend.Services.Authentication.DTO.Events.csproj" />
       <ProjectReference Include="..\TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI\TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Workers\" />
     </ItemGroup>
 
 </Project>
