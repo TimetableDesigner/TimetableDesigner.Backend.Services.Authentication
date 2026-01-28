@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using TimetableDesigner.Backend.Events.Extensions.AspNetCore.OpenApi;
+using TimetableDesigner.Backend.Events.OutboxPattern;
 using TimetableDesigner.Backend.Events.Providers.RabbitMQ;
 using TimetableDesigner.Backend.Services.Authentication.API;
 using TimetableDesigner.Backend.Services.Authentication.API.Validators;
@@ -28,6 +29,7 @@ public static class Program
         builder.Services.AddHelpers();
         builder.Services.AddValidators();
         builder.Services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(Program).Assembly));
+        builder.Services.AddWorkers();
         
         WebApplication app = builder.Build();
         
@@ -39,6 +41,12 @@ public static class Program
         app.MapEventHandlers();
         
         app.Run();
+    }
+    
+    private static IServiceCollection AddWorkers(this IServiceCollection services)
+    {
+        services.AddHostedService<EventOutboxSender<DatabaseContext>>();
+        return services;
     }
     
     private static IServiceCollection AddHelpers(this IServiceCollection services)

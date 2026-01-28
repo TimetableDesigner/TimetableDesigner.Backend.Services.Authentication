@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+      <PackageReference Include="TimetableDesigner.Backend.Events.OutboxPattern" Version="1.1.2" />
     </ItemGroup>
 
 </Project>

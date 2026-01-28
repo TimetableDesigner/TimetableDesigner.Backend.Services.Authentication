@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using TimetableDesigner.Backend.Events.OutboxPattern;
 using TimetableDesigner.Backend.Services.Authentication.Core.Helpers;
 using TimetableDesigner.Backend.Services.Authentication.Database;
 using TimetableDesigner.Backend.Services.Authentication.Database.Model;
+using TimetableDesigner.Backend.Services.Authentication.DTO.Events;
 
 namespace TimetableDesigner.Backend.Services.Authentication.Core.Commands.Register;
 
@@ -27,12 +29,12 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, RegisterResult>
             PasswordSalt = hash.Salt,
         };
         await _databaseContext.Accounts.AddAsync(account, cancellationToken);
-
-        // Change to outbox pattern
-        //RegisterEvent eventData = account.ToEvent();
-        //await _eventQueuePublisher.PublishAsync(eventData);
-        
         await _databaseContext.SaveChangesAsync(cancellationToken);
+        
+        Event eventData = Event.Create(new RegisterEvent(account.Id, account.Email));
+        await _databaseContext.Events.AddAsync(eventData, cancellationToken);
+        await _databaseContext.SaveChangesAsync(cancellationToken);
+        
 
         return new RegisterResult(account.Id, account.Email);
     }
