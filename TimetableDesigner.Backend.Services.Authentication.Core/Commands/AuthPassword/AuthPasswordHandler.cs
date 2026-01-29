@@ -10,11 +10,13 @@ public class AuthPasswordHandler : IRequestHandler<AuthPasswordCommand, AuthPass
 {
     private readonly DatabaseContext _databaseContext;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly ITokenGenerator _tokenGenerator;
 
-    public AuthPasswordHandler(DatabaseContext databaseContext, IPasswordHasher passwordHasher)
+    public AuthPasswordHandler(DatabaseContext databaseContext, IPasswordHasher passwordHasher, ITokenGenerator tokenGenerator)
     {
         _databaseContext = databaseContext;
         _passwordHasher = passwordHasher;
+        _tokenGenerator = tokenGenerator;
     }
     
     public async Task<AuthPasswordResult> Handle(AuthPasswordCommand request, CancellationToken cancellationToken)
@@ -30,6 +32,8 @@ public class AuthPasswordHandler : IRequestHandler<AuthPasswordCommand, AuthPass
         {
             return AuthPasswordResult.Failure();
         }
+
+        string accessToken = _tokenGenerator.GenerateAccessToken(account);
 
         return null;
     }
