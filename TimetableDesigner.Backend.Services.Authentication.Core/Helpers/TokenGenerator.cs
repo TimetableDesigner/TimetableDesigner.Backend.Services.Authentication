@@ -56,9 +56,28 @@ public class TokenGenerator : ITokenGenerator
         return handler.WriteToken(token);
     }
 
-    public async Task<string> GenerateRefreshTokenAsync(Account account)
+    public async Task<string> GenerateRefreshTokenAsync(Account account, bool isExtendable)
     {
-        return null;
+        string lifetimeSection = isExtendable ? "Extended" : "Normal";
+        int lifetime = _configuration.GetSection("Tokens")
+                                     .GetSection("RefreshToken")
+                                     .GetSection("Lifetime")
+                                     .GetValue<int>(lifetimeSection);
+        
+        Guid guid = Guid.NewGuid();
+        DateTimeOffset expirationDate = DateTimeOffset.UtcNow.AddMinutes(lifetime);
+
+        RefreshToken refreshToken = new RefreshToken
+        {
+            Token = guid,
+            ExpirationDate = expirationDate,
+            IsExtendable = isExtendable,
+            AccountId = account.Id,
+        };
+        await _databaseContext.RefreshTokens.AddAsync(refreshToken);
+        await _databaseContext.SaveChangesAsync();
+        
+        return guid.ToString();
     }
     
     public async Task<string> ExtendRefreshTokenAsync()

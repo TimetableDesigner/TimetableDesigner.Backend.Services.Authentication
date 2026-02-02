@@ -8,5 +8,5 @@ public class Account
     public string PasswordSalt { get; set; } = null!;
     public uint Version { get; set; }
     
-    public virtual IEnumerable<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

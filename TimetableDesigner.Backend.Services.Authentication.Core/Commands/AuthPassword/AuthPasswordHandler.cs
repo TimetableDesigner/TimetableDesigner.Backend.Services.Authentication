@@ -33,8 +33,9 @@ public class AuthPasswordHandler : IRequestHandler<AuthPasswordCommand, AuthPass
             return AuthPasswordResult.Failure();
         }
 
+        string refreshToken = await _tokenGenerator.GenerateRefreshTokenAsync(account, request.RememberMe);
         string accessToken = _tokenGenerator.GenerateAccessToken(account);
 
-        return null;
+        return AuthPasswordResult.Success(refreshToken, accessToken);
     }
 }
