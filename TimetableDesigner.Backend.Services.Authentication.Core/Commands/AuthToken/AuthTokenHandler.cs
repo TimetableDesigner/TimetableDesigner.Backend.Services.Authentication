@@ -9,31 +9,32 @@ namespace TimetableDesigner.Backend.Services.Authentication.Core.Commands.AuthTo
 public class AuthTokenHandler : IRequestHandler<AuthTokenCommand, AuthTokenResult>
 {
     private readonly DatabaseContext _databaseContext;
-    private readonly IAccessTokenGenerator _accessTokenGenerator;
+    private readonly ITokenHelper _tokenHelper;
 
-    public AuthTokenHandler(DatabaseContext databaseContext, IAccessTokenGenerator accessTokenGenerator)
+    public AuthTokenHandler(DatabaseContext databaseContext, ITokenHelper tokenHelper)
     {
         _databaseContext = databaseContext;
-        _accessTokenGenerator = accessTokenGenerator;
+        _tokenHelper = tokenHelper;
     }
     
     public async Task<AuthTokenResult> Handle(AuthTokenCommand request, CancellationToken cancellationToken)
     {
-        RefreshToken? token = await _databaseContext.RefreshTokens
+        RefreshToken? refreshToken = await _databaseContext.RefreshTokens
                                                     .Include(x => x.Account)
                                                     .FirstOrDefaultAsync(x => x.Token == Guid.Parse(request.RefreshToken), cancellationToken);
-        if (token is null || token.ExpirationDate < DateTimeOffset.UtcNow || !_accessTokenGenerator.ValidateExpiredAccessToken(request.AccessToken))
+        if (refreshToken is null || refreshToken.ExpirationDate < DateTimeOffset.UtcNow || !_tokenHelper.ValidateExpiredAccessToken(request.AccessToken))
         {
             return AuthTokenResult.Failure();
         }
         
-        string accessToken = _accessTokenGenerator.GenerateAccessToken(token.Account);
-        if (token.IsExtendable)
-        {
-            
-        }
+        string accessToken = _tokenHelper.GenerateAccessToken(refreshToken.Account.Id);
         
+        if (refreshToken.IsExtendable)
+        {
+            refreshToken.ExpirationDate = _tokenHelper.CalculateRefreshTokenExpirationDate();
+            await _databaseContext.SaveChangesAsync(cancellationToken);
+        }
 
-        return AuthTokenResult.Success(refreshToken, accessToken);
+        return AuthTokenResult.Success(accessToken, refreshToken.Token.ToString());
     }
 }

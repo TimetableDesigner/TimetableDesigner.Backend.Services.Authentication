@@ -9,18 +9,16 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace TimetableDesigner.Backend.Services.Authentication.Core.Helpers;
 
-public class AccessTokenGenerator : IAccessTokenGenerator
+public class TokenHelper : ITokenHelper
 {
     private readonly IConfiguration _configuration;
-    private readonly DatabaseContext _databaseContext;
     
-    public AccessTokenGenerator(IConfiguration configuration, DatabaseContext databaseContext)
+    public TokenHelper(IConfiguration configuration)
     {
         _configuration = configuration;
-        _databaseContext = databaseContext;
     }
     
-    public string GenerateAccessToken(Account account)
+    public string GenerateAccessToken(long accountId)
     {
         IConfigurationSection accessTokenSettings = _configuration.GetSection("Tokens")
                                                                   .GetSection("AccessToken");
@@ -40,7 +38,7 @@ public class AccessTokenGenerator : IAccessTokenGenerator
             Subject = new ClaimsIdentity(
             [
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, accountId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Exp, expirationDate.UtcTicks.ToString())
             ]),
             Issuer = accessTokenSettings.GetValue<string>("Issuer"),
@@ -54,25 +52,6 @@ public class AccessTokenGenerator : IAccessTokenGenerator
         SecurityToken token = handler.CreateToken(descriptor);
 
         return handler.WriteToken(token);
-    }
-
-    public RefreshToken GenerateRefreshToken(bool isExtendable)
-    {
-        string lifetimeSection = isExtendable ? "Extended" : "Normal";
-        int lifetime = _configuration.GetSection("Tokens")
-                                     .GetSection("RefreshToken")
-                                     .GetSection("Lifetime")
-                                     .GetValue<int>(lifetimeSection);
-        
-        Guid guid = Guid.NewGuid();
-        DateTimeOffset expirationDate = DateTimeOffset.UtcNow.AddMinutes(lifetime);
-
-        return new RefreshToken
-        {
-            Token = guid,
-            ExpirationDate = expirationDate,
-            IsExtendable = isExtendable,
-        };
     }
 
     public bool ValidateExpiredAccessToken(string accessToken)
@@ -103,5 +82,15 @@ public class AccessTokenGenerator : IAccessTokenGenerator
         JwtSecurityToken? jwtSecurityToken = validatedToken as JwtSecurityToken;
         
         return jwtSecurityToken is not null && jwtSecurityToken.Header.Alg.Equals(algorithm, StringComparison.InvariantCultureIgnoreCase);
+    }
+    
+    public DateTimeOffset CalculateRefreshTokenExpirationDate(bool isExtendable = true)
+    {
+        string lifetimeSection = isExtendable ? "Extended" : "Normal";
+        int lifetime = _configuration.GetSection("Tokens")
+                                     .GetSection("RefreshToken")
+                                     .GetSection("Lifetime")
+                                     .GetValue<int>(lifetimeSection);
+        return DateTimeOffset.UtcNow.AddMinutes(lifetime);
     }
 }

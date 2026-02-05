@@ -37,3 +37,8 @@ public class PasswordHasher : IPasswordHasher
         return hash;
     }
 }
+
+public record PasswordHashData(
+    byte[] Hash,
+    string Salt
+);
