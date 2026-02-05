@@ -3,6 +3,7 @@ using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using TimetableDesigner.Backend.Services.Authentication.Core.Commands.AuthPassword;
+using TimetableDesigner.Backend.Services.Authentication.Core.Commands.AuthToken;
 using TimetableDesigner.Backend.Services.Authentication.Core.Commands.Register;
 using TimetableDesigner.Backend.Services.Authentication.DTO.WebAPI;
 using TimetableDesigner.Backend.Services.Authentication.WebAPI.Mappers;
@@ -26,6 +27,10 @@ public static class Endpoints
                .Produces(500)
                .WithName("AuthPassword");
         builder.MapPost("/auth/token", AuthToken)
+               .AllowAnonymous()
+               .Produces<AuthResponse>()
+               .Produces(401)
+               .Produces(500)
                .WithName("AuthToken");
 
         return builder;
@@ -58,8 +63,16 @@ public static class Endpoints
         return TypedResults.Ok(response);
     }
     
-    public static async Task<Results<Ok<AuthResponse>, ProblemHttpResult>> AuthToken(AuthTokenRequest request)
+    private static async Task<Results<Ok<AuthResponse>, UnauthorizedHttpResult, InternalServerError>> AuthToken(IMediator mediator, AuthTokenRequest request, CancellationToken cancellationToken)
     {
-        return null;
+        AuthTokenResult result = await mediator.Send(request.ToCommand(), cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return TypedResults.Unauthorized();
+        }
+        
+        AuthResponse response = result.ToResponse();
+        return TypedResults.Ok(response);
     }
 }

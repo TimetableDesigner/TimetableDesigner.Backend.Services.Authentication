@@ -10,13 +10,13 @@ public class AuthPasswordHandler : IRequestHandler<AuthPasswordCommand, AuthPass
 {
     private readonly DatabaseContext _databaseContext;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly ITokenGenerator _tokenGenerator;
+    private readonly IAccessTokenGenerator _accessTokenGenerator;
 
-    public AuthPasswordHandler(DatabaseContext databaseContext, IPasswordHasher passwordHasher, ITokenGenerator tokenGenerator)
+    public AuthPasswordHandler(DatabaseContext databaseContext, IPasswordHasher passwordHasher, IAccessTokenGenerator accessTokenGenerator)
     {
         _databaseContext = databaseContext;
         _passwordHasher = passwordHasher;
-        _tokenGenerator = tokenGenerator;
+        _accessTokenGenerator = accessTokenGenerator;
     }
     
     public async Task<AuthPasswordResult> Handle(AuthPasswordCommand request, CancellationToken cancellationToken)
@@ -32,10 +32,13 @@ public class AuthPasswordHandler : IRequestHandler<AuthPasswordCommand, AuthPass
         {
             return AuthPasswordResult.Failure();
         }
+        
+        string accessToken = _accessTokenGenerator.GenerateAccessToken(account);
+        RefreshToken refreshToken = _accessTokenGenerator.GenerateRefreshToken(request.RememberMe);
+        
+        account.RefreshTokens.Add(refreshToken);
+        await _databaseContext.SaveChangesAsync(cancellationToken);
 
-        string refreshToken = await _tokenGenerator.GenerateRefreshTokenAsync(account, request.RememberMe);
-        string accessToken = _tokenGenerator.GenerateAccessToken(account);
-
-        return AuthPasswordResult.Success(refreshToken, accessToken);
+        return AuthPasswordResult.Success(accessToken, refreshToken.Token.ToString());
     }
 }

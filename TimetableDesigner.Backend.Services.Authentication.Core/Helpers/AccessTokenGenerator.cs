@@ -9,12 +9,12 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace TimetableDesigner.Backend.Services.Authentication.Core.Helpers;
 
-public class TokenGenerator : ITokenGenerator
+public class AccessTokenGenerator : IAccessTokenGenerator
 {
     private readonly IConfiguration _configuration;
     private readonly DatabaseContext _databaseContext;
     
-    public TokenGenerator(IConfiguration configuration, DatabaseContext databaseContext)
+    public AccessTokenGenerator(IConfiguration configuration, DatabaseContext databaseContext)
     {
         _configuration = configuration;
         _databaseContext = databaseContext;
@@ -56,7 +56,7 @@ public class TokenGenerator : ITokenGenerator
         return handler.WriteToken(token);
     }
 
-    public async Task<string> GenerateRefreshTokenAsync(Account account, bool isExtendable)
+    public RefreshToken GenerateRefreshToken(bool isExtendable)
     {
         string lifetimeSection = isExtendable ? "Extended" : "Normal";
         int lifetime = _configuration.GetSection("Tokens")
@@ -67,21 +67,41 @@ public class TokenGenerator : ITokenGenerator
         Guid guid = Guid.NewGuid();
         DateTimeOffset expirationDate = DateTimeOffset.UtcNow.AddMinutes(lifetime);
 
-        RefreshToken refreshToken = new RefreshToken
+        return new RefreshToken
         {
             Token = guid,
             ExpirationDate = expirationDate,
             IsExtendable = isExtendable,
-            AccountId = account.Id,
         };
-        await _databaseContext.RefreshTokens.AddAsync(refreshToken);
-        await _databaseContext.SaveChangesAsync();
-        
-        return guid.ToString();
     }
-    
-    public async Task<string> ExtendRefreshTokenAsync()
+
+    public bool ValidateExpiredAccessToken(string accessToken)
     {
-        return null;
+        IConfigurationSection accessTokenSettings = _configuration.GetSection("Tokens")
+                                                                  .GetSection("AccessToken");
+        
+        string stringKey = accessTokenSettings.GetValue<string>("Key")!;
+        byte[] encodedKey = Encoding.UTF8.GetBytes(stringKey);
+        SymmetricSecurityKey key = new SymmetricSecurityKey(encodedKey);
+
+        string algorithm = accessTokenSettings.GetValue<string>("Algorithm")!;
+        
+        TokenValidationParameters tokenValidation = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateLifetime = false,
+            ValidIssuer = accessTokenSettings.GetValue<string>("Issuer"),
+            ValidAudience = accessTokenSettings.GetValue<string>("Audience"),
+            IssuerSigningKey = key,
+            ClockSkew = TimeSpan.FromMinutes(1),
+        };
+        
+        JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+        tokenHandler.ValidateToken(accessToken, tokenValidation, out SecurityToken validatedToken);
+        JwtSecurityToken? jwtSecurityToken = validatedToken as JwtSecurityToken;
+        
+        return jwtSecurityToken is not null && jwtSecurityToken.Header.Alg.Equals(algorithm, StringComparison.InvariantCultureIgnoreCase);
     }
 }

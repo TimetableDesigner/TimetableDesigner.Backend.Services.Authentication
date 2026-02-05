@@ -52,7 +52,7 @@ public static class Program
     private static IServiceCollection AddHelpers(this IServiceCollection services)
     {
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
-        services.AddScoped<ITokenGenerator, TokenGenerator>();
+        services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
         return services;
     }
 

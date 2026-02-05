@@ -2,9 +2,9 @@
 
 namespace TimetableDesigner.Backend.Services.Authentication.Core.Helpers;
 
-public interface ITokenGenerator
+public interface IAccessTokenGenerator
 {
     string GenerateAccessToken(Account account);
-    Task<string> GenerateRefreshTokenAsync(Account account, bool isExtendable);
-    Task<string> ExtendRefreshTokenAsync();
+    RefreshToken GenerateRefreshToken(bool isExtendable);
+    bool ValidateExpiredAccessToken(string accessToken);
 }
